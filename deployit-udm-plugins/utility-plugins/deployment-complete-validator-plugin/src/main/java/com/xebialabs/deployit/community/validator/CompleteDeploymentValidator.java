@@ -11,7 +11,7 @@ import com.xebialabs.deployit.plugin.api.validation.ValidationContext;
 public class CompleteDeploymentValidator implements com.xebialabs.deployit.plugin.api.validation.Validator<DeployedApplication> {
     public void validate(DeployedApplication deployedApplication, ValidationContext context) {
     	Set<Deployable> deployedDeployables = new HashSet<Deployable>();
-    	for (Deployed deployed : deployedApplication.getDeployeds()) {
+    	for (Deployed<?, ?> deployed : deployedApplication.getDeployeds()) {
     		deployedDeployables.add(deployed.getDeployable());
     	}
     	Set<Deployable> unmappedDeployables = (new HashSet<Deployable>(deployedApplication.getVersion().getDeployables()));

@@ -2,11 +2,11 @@ package com.xebialabs.deployit.community.validator;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.atLeastOnce;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,8 +30,10 @@ public class CompleteDeploymentValidatorTest {
 	@Mock
 	private ValidationContext context;
 
+	@SuppressWarnings("rawtypes")
 	private Deployed deployed1;
 
+	@SuppressWarnings("rawtypes")
 	private Deployed deployed2;
 
 	private CompleteDeploymentValidator validator;
@@ -55,6 +57,7 @@ public class CompleteDeploymentValidatorTest {
 		validator = new CompleteDeploymentValidator();		
     }
     
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void completeDeploymentShouldPassValidation() {
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
@@ -64,6 +67,7 @@ public class CompleteDeploymentValidatorTest {
 		verify(context, never()).error(anyString(), anyObject());
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldFailValidation() {
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
@@ -78,7 +82,8 @@ public class CompleteDeploymentValidatorTest {
         when(deployable.getId()).thenReturn(id);
         return deployable;
 	}
-	
+
+	@SuppressWarnings("rawtypes")
 	private Deployed mockDeployed(final String id, final Deployable deployable) {
 		Deployed deployed = mock(Deployed.class);
 		when(deployed.getId()).thenReturn(id);
