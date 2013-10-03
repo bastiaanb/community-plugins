@@ -6,4 +6,17 @@
   <type-modification type="udm.DeployedApplication">
   	<rule type="complete-deployment"/>
   </type-modification>
+
+  <type-modification type="udm.Deployable">
+    <property name="requiredDeploymentCardinality" kind="enum" enum-class="com.xebialabs.deployit.community.validator.DeploymentCardinality"
+      description="specifies how many Deployeds should be generated from this Deployable" default="MANDATORY" category="Deployment" label="Required cardinality" />
+  </type-modification>
+
+  <type-modification type="udm.Environment">
+    <property name="ignoreRedundancyRequirements" kind="boolean"
+      description="ignore requirements for redundancy in Deployable.requiredDeploymentCardinality" default="false" category="Deployment" label="ignore redundancy requirements" />
+    <property name="ignoreCardinalityRequirements" kind="boolean"
+      description="ignore all requirements in Deployable.requiredDeploymentCardinality" default="false" category="Deployment" label="ignore cardinality requirements" />
+  </type-modification>
+
 </synthetic>
