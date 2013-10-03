@@ -11,10 +11,10 @@ import com.xebialabs.deployit.plugin.api.validation.ValidationContext;
 
 public class CompleteDeploymentValidator implements com.xebialabs.deployit.plugin.api.validation.Validator<DeployedApplication> {
 	public static final DeploymentCardinality DEFAULT_DEPLOYMENT_CARDINALITY = DeploymentCardinality.MANDATORY;
-	public static final String DEPLOYMENT_CARDINALITY = "deploymentCardinality";
+	public static final String DEPLOYMENT_CARDINALITY = "requiredDeploymentCardinality";
 	public static final String IGNORE_CARDINALITY_REQUIREMENTS = "ignoreCardinalityRequirements";
 	public static final String IGNORE_REDUNDANCY_REQUIREMENTS = "ignoreRedundancyRequirements";
-	
+
     public void validate(DeployedApplication deployedApplication, ValidationContext context) {
     	if (Boolean.TRUE.equals(deployedApplication.getEnvironment().getProperty(IGNORE_CARDINALITY_REQUIREMENTS))) {
     		return;
@@ -47,7 +47,7 @@ public class CompleteDeploymentValidator implements com.xebialabs.deployit.plugi
     		}
     		
     		if (!cardinality.isInRange(entry.getValue())) {
-    			context.error("deployable %s would be deployed %d times, but required cardinality is %s", deployable.getId(), entry.getValue(), cardinality);
+     			context.error("deployable %s would be deployed %d times, but required cardinality is %s", deployable.getId(), entry.getValue(), cardinality);
     		}
     	}
     }

@@ -1,9 +1,8 @@
 package com.xebialabs.deployit.community.validator;
 
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
