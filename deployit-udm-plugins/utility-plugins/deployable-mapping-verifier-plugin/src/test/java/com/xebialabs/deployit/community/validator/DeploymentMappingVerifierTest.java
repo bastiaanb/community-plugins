@@ -1,39 +1,32 @@
 package com.xebialabs.deployit.community.validator;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.anyVararg;
-import static org.mockito.Mockito.atLeastOnce;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.xebialabs.deployit.plugin.api.udm.ConfigurationItem;
 import com.xebialabs.deployit.plugin.api.udm.Deployable;
 import com.xebialabs.deployit.plugin.api.udm.Deployed;
 import com.xebialabs.deployit.plugin.api.udm.DeployedApplication;
 import com.xebialabs.deployit.plugin.api.udm.Environment;
 import com.xebialabs.deployit.plugin.api.udm.Version;
-import com.xebialabs.deployit.plugin.api.validation.ValidationContext;
 
-public class CompleteDeploymentValidatorTest {
+public class DeploymentMappingVerifierTest {
 
 	@Mock
     private DeployedApplication deployedApplication;
 	
 	@Mock
 	private Environment environment;
-
-	@Mock
-	private ValidationContext context;
 
 	@SuppressWarnings("rawtypes")
 	private Deployed deployed1;
@@ -48,7 +41,7 @@ public class CompleteDeploymentValidatorTest {
 	
 	private Deployable deployable2;
 	
-	private CompleteDeploymentValidator validator;
+	private DeploymentMappingVerifier verifier;
 	
 	@Before
     public void initMocks() throws Exception {
@@ -68,101 +61,110 @@ public class CompleteDeploymentValidatorTest {
         deployed2 = mockDeployed("Infrastructure/test-server-1/test-command-2", deployable2);
         deployed2b = mockDeployed("Infrastructure/test-server-2/test-command-2", deployable2);
         
-		validator = new CompleteDeploymentValidator();		
+		verifier = new DeploymentMappingVerifier();		
     }
     
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void completeDeploymentShouldPassValidation() {
+        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
+        setMustBeMapped(deployable2, MustBeMapped.AT_LEAST_ONCE);
+        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
 
-		validator.validate(deployedApplication, context);
+        List<String> errorMessages = verifier.validate(deployedApplication);
 
-		verifyValidatePasses();
+        assertTrue(errorMessages.isEmpty());
 	}
 
-	@SuppressWarnings("rawtypes")
+    private void setEnforcementLevel(Environment environment, MustBeMappedEnforcementLevel enforcementLevel) {
+        when(environment.hasProperty("mustBeMappedEnforcementLevel")).thenReturn(true);
+        when(environment.getProperty("mustBeMappedEnforcementLevel")).thenReturn(enforcementLevel);
+    }
+
+    private void setMustBeMapped(Deployable deployable, MustBeMapped mustBeMapped) {
+        when(deployable.hasProperty("mustBeMapped")).thenReturn(true);
+        when(deployable.getProperty("mustBeMapped")).thenReturn(mustBeMapped);
+    }
+
+    @SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldFailValidation() {
+        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
+        setMustBeMapped(deployable2, MustBeMapped.AT_LEAST_ONCE);
+        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
 
-		validator.validate(deployedApplication, context);
+        List<String> errorMessages = verifier.validate(deployedApplication);
 
-		verifyValidateFails();
+        assertFalse(errorMessages.isEmpty());
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldPassValidationIfDeployableCardinalityIsOptional() {
+        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
+        setMustBeMapped(deployable2, MustBeMapped.OPTIONALLY);
+        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
-		mockCiProperty(deployable2, "requiredDeploymentCardinality", DeploymentCardinality.OPTIONAL);
 
-		validator.validate(deployedApplication, context);
+        List<String> errorMessages = verifier.validate(deployedApplication);
 
-		verifyValidatePasses();
+        assertTrue(errorMessages.isEmpty());
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void redundantDeploymentShouldPassValidationIfDeployableCardinalityIsRedudant() {
+        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
+        setMustBeMapped(deployable2, MustBeMapped.MORE_THAN_ONCE);
+        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2, deployed2b)));
-		mockCiProperty(deployable2, "requiredDeploymentCardinality", DeploymentCardinality.REDUNDANT);
 
-		validator.validate(deployedApplication, context);
+        List<String> errorMessages = verifier.validate(deployedApplication);
 
-		verifyValidatePasses();
+        assertTrue(errorMessages.isEmpty());
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void nonRedundantDeploymentShouldFailValidationIfDeployableCardinalityIsRedudant() {
+        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
+        setMustBeMapped(deployable2, MustBeMapped.MORE_THAN_ONCE);
+        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
-		mockCiProperty(deployable2, "requiredDeploymentCardinality", DeploymentCardinality.REDUNDANT);
 
-		validator.validate(deployedApplication, context);
-		
-		verifyValidateFails();
+        List<String> errorMessages = verifier.validate(deployedApplication);
 
+        assertFalse(errorMessages.isEmpty());
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void nonRedundantDeploymentShouldPassValidationIfDeployableCardinalityIsRedudantAndEnvironmentIgnoresRedundancyRequirements() {
+        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
+        setMustBeMapped(deployable2, MustBeMapped.MORE_THAN_ONCE);
+        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.AT_LEAST_ONCE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
-		mockCiProperty(deployable2, "requiredDeploymentCardinality", DeploymentCardinality.REDUNDANT);
-		mockCiProperty(environment, "ignoreRedundancyRequirements", true);
 
-		validator.validate(deployedApplication, context);
-		
-		verifyValidatePasses();
+        List<String> errorMessages = verifier.validate(deployedApplication);
 
+        assertTrue(errorMessages.isEmpty());
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldPassValidationIfEnvironmentIgnoresCardinalityRequirements() {
+        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
+        setMustBeMapped(deployable2, MustBeMapped.AT_LEAST_ONCE);
+        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.NONE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
-		mockCiProperty(environment, "ignoreCardinalityRequirements", true);
 
-		validator.validate(deployedApplication, context);
-		
-		verifyValidatePasses();
-	}
+        List<String> errorMessages = verifier.validate(deployedApplication);
 
-	private void verifyValidatePasses() {
-		verify(context, never()).error(anyString(), anyVararg());
-		
+        assertTrue(errorMessages.isEmpty());
 	}
 
-	private void verifyValidateFails() {
-		verify(context, atLeastOnce()).error(anyString(), anyVararg());		
-	}
-	
-	private void mockCiProperty(ConfigurationItem ci, String name, Object value) {
-		when(ci.hasProperty(name)).thenReturn(true);
-		when(ci.getProperty(name)).thenReturn(value);
-	}
-	
 	private Deployable mockDeployable(final String id) {
         Deployable deployable = mock(Deployable.class);
         when(deployable.getId()).thenReturn(id);

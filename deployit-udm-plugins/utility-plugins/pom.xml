@@ -31,6 +31,6 @@
     <module>rpm-plugin</module>
     <module>scheduler-plugin</module>
     <module>credential-on-host-plugin</module>
-    <module>deployment-complete-validator-plugin</module>
+    <module>deployable-mapping-verifier-plugin</module>
   </modules>
 </project>
