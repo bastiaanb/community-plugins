@@ -1,4 +1,4 @@
-package com.xebialabs.deployit.community.validator;
+package com.xebialabs.deployit.community.verifier;
 
 public enum MustBeMapped {
     NEVER(0, 0), OPTIONALLY(0, Integer.MAX_VALUE), AT_LEAST_ONCE(1, Integer.MAX_VALUE), EXACTLY_ONCE(1, 1),

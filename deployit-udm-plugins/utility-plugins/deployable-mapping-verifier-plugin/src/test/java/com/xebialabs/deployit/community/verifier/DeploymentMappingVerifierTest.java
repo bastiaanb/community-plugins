@@ -1,4 +1,4 @@
-package com.xebialabs.deployit.community.validator;
+package com.xebialabs.deployit.community.verifier;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -14,6 +14,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.xebialabs.deployit.community.verifier.DeploymentMappingVerifier;
+import com.xebialabs.deployit.community.verifier.MustBeMapped;
+import com.xebialabs.deployit.community.verifier.MustBeMappedEnforcementLevel;
 import com.xebialabs.deployit.plugin.api.udm.Deployable;
 import com.xebialabs.deployit.plugin.api.udm.Deployed;
 import com.xebialabs.deployit.plugin.api.udm.DeployedApplication;

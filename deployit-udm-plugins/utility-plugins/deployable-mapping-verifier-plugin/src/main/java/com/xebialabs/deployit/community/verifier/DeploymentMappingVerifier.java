@@ -1,4 +1,4 @@
-package com.xebialabs.deployit.community.validator;
+package com.xebialabs.deployit.community.verifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
