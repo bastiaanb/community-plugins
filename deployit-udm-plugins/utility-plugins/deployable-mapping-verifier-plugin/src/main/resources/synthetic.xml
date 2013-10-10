@@ -4,12 +4,12 @@
            xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
 
   <type-modification type="udm.BaseDeployable">
-    <property name="mustBeMapped" kind="enum" enum-class="com.xebialabs.deployit.community.validator.MustBeMapped" required="false"
+    <property name="mustBeMapped" kind="enum" enum-class="com.xebialabs.deployit.community.verifier.MustBeMapped" required="false"
       description="specifies how many Deployeds a valid deployment should map from this Deployable" default="AT_LEAST_ONCE" category="Deployment"/>
   </type-modification>
 
   <type-modification type="udm.Environment">
-    <property name="mustBeMappedEnforcementLevel" kind="enum" enum-class="com.xebialabs.deployit.community.validator.MustBeMappedEnforcementLevel" required="false"
+    <property name="mustBeMappedEnforcementLevel" kind="enum" enum-class="com.xebialabs.deployit.community.verifier.MustBeMappedEnforcementLevel" required="false"
       description="specifies the level of enforcement of mustBeMapped properties" default="NONE" category="Deployment" />
   </type-modification>
 

@@ -17,20 +17,20 @@ public class VerifyDeployableMapping {
 
         if (!errorMessages.isEmpty()) {
             throw new IllegalArgumentException(buildErrorMessage(deployedApplication, errorMessages));
-		}
+        }
 
-		return null;
-	}
+        return null;
+    }
 
     private String buildErrorMessage(DeployedApplication deployedApplication, List<String> messages) {
         StringBuilder errorMessage = new StringBuilder();
         errorMessage.append("Cannot deploy '").append(deployedApplication.getName())
-        .append("' (version ").append(deployedApplication.getVersion().getVersion())
-        .append(") to '").append(deployedApplication.getEnvironment().getName())
-        .append("' as the following cardinality requirements are not met:");
+            .append("' (version ").append(deployedApplication.getVersion().getVersion())
+            .append(") to '").append(deployedApplication.getEnvironment().getName())
+            .append("' as the following mapping requirements are not met:");
         for (String message : messages) {
             errorMessage.append("\n- '").append(message).append("'");
         }
         return errorMessage.toString();
-	}
+    }
 }

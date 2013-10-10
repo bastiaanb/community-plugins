@@ -1,10 +1,5 @@
 package com.xebialabs.deployit.community.verifier;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -14,14 +9,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.xebialabs.deployit.community.verifier.DeploymentMappingVerifier;
-import com.xebialabs.deployit.community.verifier.MustBeMapped;
-import com.xebialabs.deployit.community.verifier.MustBeMappedEnforcementLevel;
 import com.xebialabs.deployit.plugin.api.udm.Deployable;
 import com.xebialabs.deployit.plugin.api.udm.Deployed;
 import com.xebialabs.deployit.plugin.api.udm.DeployedApplication;
 import com.xebialabs.deployit.plugin.api.udm.Environment;
 import com.xebialabs.deployit.plugin.api.udm.Version;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DeploymentMappingVerifierTest {
 
@@ -79,16 +76,6 @@ public class DeploymentMappingVerifierTest {
 
         assertTrue(errorMessages.isEmpty());
 	}
-
-    private void setEnforcementLevel(Environment environment, MustBeMappedEnforcementLevel enforcementLevel) {
-        when(environment.hasProperty("mustBeMappedEnforcementLevel")).thenReturn(true);
-        when(environment.getProperty("mustBeMappedEnforcementLevel")).thenReturn(enforcementLevel);
-    }
-
-    private void setMustBeMapped(Deployable deployable, MustBeMapped mustBeMapped) {
-        when(deployable.hasProperty("mustBeMapped")).thenReturn(true);
-        when(deployable.getProperty("mustBeMapped")).thenReturn(mustBeMapped);
-    }
 
     @SuppressWarnings("rawtypes")
 	@Test
@@ -167,6 +154,16 @@ public class DeploymentMappingVerifierTest {
 
         assertTrue(errorMessages.isEmpty());
 	}
+
+    private void setEnforcementLevel(Environment environment, MustBeMappedEnforcementLevel enforcementLevel) {
+        when(environment.hasProperty("mustBeMappedEnforcementLevel")).thenReturn(true);
+        when(environment.getProperty("mustBeMappedEnforcementLevel")).thenReturn(enforcementLevel);
+    }
+
+    private void setMustBeMapped(Deployable deployable, MustBeMapped mustBeMapped) {
+        when(deployable.hasProperty("mustBeMapped")).thenReturn(true);
+        when(deployable.getProperty("mustBeMapped")).thenReturn(mustBeMapped);
+    }
 
 	private Deployable mockDeployable(final String id) {
         Deployable deployable = mock(Deployable.class);

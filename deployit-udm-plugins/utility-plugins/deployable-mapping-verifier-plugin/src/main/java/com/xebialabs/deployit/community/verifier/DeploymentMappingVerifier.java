@@ -15,7 +15,8 @@ public class DeploymentMappingVerifier {
     public static final String MUST_BE_MAPPED_ENFORCEMENT_LEVEL_PROPERTY = "mustBeMappedEnforcementLevel";
 
     public List<String> validate(DeployedApplication deployedApplication) {
-        final MustBeMappedEnforcementLevel mustBeMappedEnforcementLevel = deployedApplication.getEnvironment().getProperty(MUST_BE_MAPPED_ENFORCEMENT_LEVEL_PROPERTY); 
+        final MustBeMappedEnforcementLevel mustBeMappedEnforcementLevel =
+            deployedApplication.getEnvironment().getProperty(MUST_BE_MAPPED_ENFORCEMENT_LEVEL_PROPERTY);
         final Set<Deployable> allDeployables = deployedApplication.getVersion().getDeployables();
         final Map<Deployable, Integer> deployedCountsPerDeployable = new HashMap<Deployable, Integer>(allDeployables.size());
         for (final Deployable deployabe : allDeployables) {
@@ -35,7 +36,7 @@ public class DeploymentMappingVerifier {
 
             if (!mustBeMapped.isCompliant(entry.getValue(), mustBeMappedEnforcementLevel)) {
                 errorMessages.add(String.format("deployable %s would be deployed %d times, but must be mapped %s",
-                        deployable.getId(), entry.getValue(), mustBeMapped));
+                    deployable.getId(), entry.getValue(), mustBeMapped));
             }
         }
 
