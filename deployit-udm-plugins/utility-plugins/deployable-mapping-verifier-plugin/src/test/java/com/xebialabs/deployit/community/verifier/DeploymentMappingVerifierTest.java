@@ -67,9 +67,9 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void completeDeploymentShouldPassValidation() {
-        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
-        setMustBeMapped(deployable2, MustBeMapped.AT_LEAST_ONCE);
-        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -80,9 +80,9 @@ public class DeploymentMappingVerifierTest {
     @SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldFailValidation() {
-        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
-        setMustBeMapped(deployable2, MustBeMapped.AT_LEAST_ONCE);
-        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -93,9 +93,9 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldPassValidationIfDeployableCardinalityIsOptional() {
-        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
-        setMustBeMapped(deployable2, MustBeMapped.OPTIONALLY);
-        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.ANY);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -106,9 +106,9 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void redundantDeploymentShouldPassValidationIfDeployableCardinalityIsRedudant() {
-        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
-        setMustBeMapped(deployable2, MustBeMapped.MORE_THAN_ONCE);
-        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.MORE_THAN_ONE);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2, deployed2b)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -119,9 +119,9 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void nonRedundantDeploymentShouldFailValidationIfDeployableCardinalityIsRedudant() {
-        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
-        setMustBeMapped(deployable2, MustBeMapped.MORE_THAN_ONCE);
-        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.MORE_THAN_ONCE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.MORE_THAN_ONE);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -132,9 +132,9 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void nonRedundantDeploymentShouldPassValidationIfDeployableCardinalityIsRedudantAndEnvironmentIgnoresRedundancyRequirements() {
-        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
-        setMustBeMapped(deployable2, MustBeMapped.MORE_THAN_ONCE);
-        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.AT_LEAST_ONCE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.MORE_THAN_ONE);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.AT_LEAST_ONE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -145,9 +145,9 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldPassValidationIfEnvironmentIgnoresCardinalityRequirements() {
-        setMustBeMapped(deployable1, MustBeMapped.AT_LEAST_ONCE);
-        setMustBeMapped(deployable2, MustBeMapped.AT_LEAST_ONCE);
-        setEnforcementLevel(environment, MustBeMappedEnforcementLevel.NONE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.NONE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -155,14 +155,14 @@ public class DeploymentMappingVerifierTest {
         assertTrue(errorMessages.isEmpty());
 	}
 
-    private void setEnforcementLevel(Environment environment, MustBeMappedEnforcementLevel enforcementLevel) {
-        when(environment.hasProperty("mustBeMappedEnforcementLevel")).thenReturn(true);
-        when(environment.getProperty("mustBeMappedEnforcementLevel")).thenReturn(enforcementLevel);
+    private void setRequiredInstancesEnforcement(Environment environment, RequiredInstancesEnforcement enforcementLevel) {
+        when(environment.hasProperty("requiredInstancesEnforcement")).thenReturn(true);
+        when(environment.getProperty("requiredInstancesEnforcement")).thenReturn(enforcementLevel);
     }
 
-    private void setMustBeMapped(Deployable deployable, MustBeMapped mustBeMapped) {
-        when(deployable.hasProperty("mustBeMapped")).thenReturn(true);
-        when(deployable.getProperty("mustBeMapped")).thenReturn(mustBeMapped);
+    private void setRequiredInstancesPerEnvironment(Deployable deployable, RequiredInstancesPerEnvironment mustBeMapped) {
+        when(deployable.hasProperty("requiredInstancesPerEnvironment")).thenReturn(true);
+        when(deployable.getProperty("requiredInstancesPerEnvironment")).thenReturn(mustBeMapped);
     }
 
 	private Deployable mockDeployable(final String id) {

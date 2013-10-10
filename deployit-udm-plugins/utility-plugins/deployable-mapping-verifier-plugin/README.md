@@ -14,20 +14,20 @@ Place the plugin JAR file into your `SERVER_HOME/plugins` directory.
 
 # Usage
 
-This plugin adds the optional property `mustBeMapped` to `udm.BaseDeployable`. This is an enum that specifies how many Deployeds a valid deployment should map from this Deployable. It can have the following values:
+This plugin adds the optional property `requiredInstancesPerEnviroment` to `udm.BaseDeployable`. This is an enum that specifies how many Deployeds a valid deployment should map from this Deployable. It can have the following values:
 
-* NEVER. #deployeds == 0, i.e. this Deployable should not be deployed (in this Enviroment). Mostly useful when preventing deployment to a particular Environment.
-* OPTIONALLY. #deployeds >= 0, this Deployable may be deployed but does not have to be.
-* AT_LEAST_ONCE. #deployeds >= 1, this Deployable must be deployed.
-* EXACTLY_ONCE. #deployeds == 1, this Deployable must de deployed to one Container.
-* MORE_THAN_ONCE. #deployeds > 1, this Deployable must be deployed to more than one Container.
+* EXACTLY_ZERO. #deployeds == 0, i.e. this Deployable should not be deployed (in this Enviroment). Mostly useful when preventing deployment to a particular Environment.
+* ANY. #deployeds >= 0, this Deployable may be deployed but does not have to be.
+* AT_LEAST_ONE. #deployeds >= 1, this Deployable must be deployed.
+* EXACTLY_ONE. #deployeds == 1, this Deployable must de deployed to one Container.
+* MORE_THAN_ONE. #deployeds > 1, this Deployable must be deployed to more than one Container.
 
-The default value for this property is `AT_LEAST_ONCE`, indicating that typically Deployables must be part of the deployment. This can be overridden in `deployit-defaults.properties` of course.
+The default value for this property is `AT_LEAST_ONE`, indicating that typically Deployables must be part of the deployment. This can be overridden in `deployit-defaults.properties` of course.
 
-The plugin also adds an optional property `mustBeMappedEnforcementLevel` to `udm.Environment`. This specifies how strict the enforcement of the `mustBeMapped` checking should be. It can have the following values:
+The plugin also adds an optional property `requiredInstancesEnforcementLevel` to `udm.Environment`. This specifies the strictness of enforcement of the `requiredInstancesPerEnviroment` requirements. It can have the following values:
 
-* NONE. Skip `mustBeMapped` checking completely.
-* AT_LEAST_ONCE. Enforce `mustBeMapped` checking, but treat MORE_THAN_ONCE as AT_LEAST_ONCE. This enables scenarios where redundant deployment is mandatory for the production environment but deployemnt to a single server is sufficient for test environments. 
-* MORE_THAN_ONCE. Enforce full `mustBeMapped` checking.
+* NONE. Skip `requiredInstancesPerEnviroment` checking completely.
+* AT_LEAST_ONE. Enforce `requiredInstancesPerEnviroment` checking, but treat MORE_THAN_ONE as AT_LEAST_ONE. This enables scenarios where redundant deployment is mandatory for the production environment but deployemnt to a single server is sufficient for test environments. 
+* FULL. Enforce full `requiredInstancesPerEnviroment` checking.
 
-The default value for this property is `NONE`. This enables a gradual transition to enforcement once all applications for an environment have correct `mustBeMapped` configurations. 
+The default value for this property is `NONE`. This enables a gradual transition to enforcement once all applications for an environment have correct `requiredInstancesPerEnviroment` configurations. 
