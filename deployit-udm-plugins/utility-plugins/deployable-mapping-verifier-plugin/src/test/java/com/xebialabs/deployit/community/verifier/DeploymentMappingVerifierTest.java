@@ -67,8 +67,8 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void completeDeploymentShouldPassValidation() {
-        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
-        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.ONE_OR_MORE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.ONE_OR_MORE);
         setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
 
@@ -80,8 +80,8 @@ public class DeploymentMappingVerifierTest {
     @SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldFailValidation() {
-        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
-        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.ONE_OR_MORE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.ONE_OR_MORE);
         setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
 
@@ -93,8 +93,8 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldPassValidationIfDeployableCardinalityIsOptional() {
-        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
-        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.ANY);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.ONE_OR_MORE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.ZERO_OR_MORE);
         setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
 
@@ -106,8 +106,8 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void redundantDeploymentShouldPassValidationIfDeployableCardinalityIsRedudant() {
-        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
-        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.MORE_THAN_ONE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.ONE_OR_MORE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.TWO_OR_MORE);
         setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2, deployed2b)));
 
@@ -119,8 +119,8 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void nonRedundantDeploymentShouldFailValidationIfDeployableCardinalityIsRedudant() {
-        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
-        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.MORE_THAN_ONE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.ONE_OR_MORE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.TWO_OR_MORE);
         setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.FULL);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
 
@@ -132,9 +132,9 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void nonRedundantDeploymentShouldPassValidationIfDeployableCardinalityIsRedudantAndEnvironmentIgnoresRedundancyRequirements() {
-        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
-        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.MORE_THAN_ONE);
-        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.ONE_OR_MORE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.TWO_OR_MORE);
+        setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.LENIENT);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1, deployed2)));
 
         List<String> errorMessages = verifier.validate(deployedApplication);
@@ -145,8 +145,8 @@ public class DeploymentMappingVerifierTest {
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void incompleteDeploymentShouldPassValidationIfEnvironmentIgnoresCardinalityRequirements() {
-        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
-        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.AT_LEAST_ONE);
+        setRequiredInstancesPerEnvironment(deployable1, RequiredInstancesPerEnvironment.ONE_OR_MORE);
+        setRequiredInstancesPerEnvironment(deployable2, RequiredInstancesPerEnvironment.ONE_OR_MORE);
         setRequiredInstancesEnforcement(environment, RequiredInstancesEnforcement.NONE);
 		when(deployedApplication.getDeployeds()).thenReturn(new HashSet<Deployed>(Arrays.asList(deployed1)));
 
